@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<config xmlns="http://thelia.net/schema/dic/config"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://thelia.net/schema/dic/config http://thelia.net/schema/dic/config/thelia-1.0.xsd">
+
+    <forms>
+        <form name="backofficecss.edition_form" class="BackOfficeCss\Form\CssCodeForm" />
+    </forms>
+
+    <hooks>
+        <hook id="backofficecss.css_render_hook" class="BackOfficeCss\Hook\CssRenderHook" scope="request">
+            <tag name="hook.event_listener" event="main.stylesheet" type="front" active="1" />
+            <tag name="hook.event_listener" event="main.top-menu-tools" type="back" active="1" />
+        </hook>
+    </hooks>
+</config>

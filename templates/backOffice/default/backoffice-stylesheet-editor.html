@@ -1,0 +1,119 @@
+{extends file="admin-layout.tpl"}
+
+{block name="no-return-functions"}
+    {$admin_current_location = 'tools'}
+{/block}
+
+{block name="page-title"}{intl d="backofficecss" l='Backoffice CSS Editor'}{/block}
+
+{block name="check-resource"}admin.module{/block}
+{block name="check-access"}view{/block}
+{block name="check-module"}BackOfficeCss{/block}
+
+{block name="after-admin-css"}
+    {stylesheets file="assets/css/codemirror.css" source="BackOfficeCss"}
+        <link rel="stylesheet" href="{$asset_url}"  />
+    {/stylesheets}
+{/block}
+
+{block name="main-content"}
+    <div id="wrapper" class="container">
+
+        {*breadcrumb *}
+
+        <ul class="breadcrumb">
+            <li><a href="{url path='/admin/home'}">{intl d="backofficecss" l="Home"}</a></li>
+            <li><a href="{url path='/admin/module/BackOfficeCss'}">{intl d="backofficecss" l="Edit stylesheet"}</a></li>
+        </ul>
+
+        <div class="general-block-decorator">
+            <div class="title title-without-tabs">
+                {intl d="backofficecss" l="Css editor"}
+            </div>
+
+            {**
+             * error messages
+             *}
+
+            {* danger *}
+            {if $error_message}
+                <div class="alert alert-danger">
+                    {$error_message}
+                </div>
+            {/if}
+
+            {if $file_is_directory}
+                {assign readonly_trigger 1}
+                <div class="alert alert-danger">
+                    {intl d="backofficecss" l="The asset file doesn't exist, but a directory has its name"}
+                </div>
+            {/if}
+
+
+            {* Not warning error *}
+            {if $file_readonly}
+                {assign readonly_trigger 1}
+                <div class="alert alert-warning">
+                    {intl d="backofficecss" l="The asset file is readonly. Please change its rights"}
+                </div>
+            {/if}
+
+            {if $file_not_readable}
+                {if $file_readonly}
+                    {assign readonly_trigger 1}
+                {else}
+                    <div class="alert alert-warning">
+                        {intl d="backofficecss" l="The asset file can't be read, but can be written"}
+                    </div>
+                {/if}
+            {/if}
+
+            {* success *}
+            {if $success}
+                <div class="alert alert-success">
+                    {intl d="backofficecss" l="The file has been correctly saved"}
+                </div>
+            {/if}
+
+            {form name="backofficecss.edition_form"}
+                <form action="{url current=1}" method="post" {form_enctype form=$form}>
+                    {form_hidden_fields form=$form}
+                    <div class="row">
+                        <div class="col-md-12">
+                            <button type="submit" class="btn btn-success">{intl d="backofficecss" l="Save"}</button>
+                        </div>
+                    </div>
+                    <br/>
+
+                    <div class="row">
+                        <div class="col-md-12">
+                            {form_field form=$form field="css_code"}
+                            <textarea name="{$name}" id="css_editor_ta" >{$file_contents nofilter}</textarea>
+                            {/form_field}
+                        </div>
+                    </div>
+                </form>
+            {/form}
+        </div>
+    </div>
+{/block}
+{block name="javascript-initialization"}
+    {javascripts file="assets/js/codemirror.js" source="BackOfficeCss"}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    {javascripts file="assets/js/css.js" source="BackOfficeCss"}
+        <script src="{$asset_url}"></script>
+    {/javascripts}
+
+    <script>
+        var myCodeMirror = CodeMirror.fromTextArea(document.getElementById("css_editor_ta"), {
+            {if $readonly_trigger}readOnly: true,{/if}
+            lineNumbers: true,
+            mode: "css"
+        });
+    </script>
+{/block}
+
+{block name="javascript-last-call"}
+{/block}
